@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const Sequelize = require("sequelize");
 const fs = require("node:fs");
 const path = require("node:path");
 const {
@@ -23,6 +24,14 @@ const client = new Client({
 
 client.commands = new Collection();
 
+// init database
+const sequelize = new Sequelize("database", "user", "password", {
+  host: "localhost",
+  dialect: "sqlite",
+  logging: false,
+  storage: "database.sqlite",
+});
+
 // get commands from the commands folder
 const commandsPath = path.join(__dirname, "commands");
 const commandFiles = fs
@@ -38,6 +47,9 @@ for (const file of commandFiles) {
   client.commands.set(command.data.name, command);
 }
 
+// init database
+const Messages = require("./models/Messages")(sequelize, Sequelize.DataTypes);
+
 // Set up event listeners
 const eventsPath = path.join(__dirname, "events");
 const eventFiles = fs
@@ -47,6 +59,7 @@ const eventFiles = fs
 for (const file of eventFiles) {
   const event = require(path.join(eventsPath, file));
   if (event.once) {
+    Messages.sync();
     client.once(event.name, (...args) => event.execute(...args));
   } else {
     client.on(event.name, (...args) => event.execute(...args));

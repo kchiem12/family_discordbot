@@ -2,16 +2,12 @@ module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
     "messages",
     {
-      id: {
-        type: DataTypes.STRING,
-        primaryKey: true,
-      },
       gpt_message: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       user_message: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       user_id: {
