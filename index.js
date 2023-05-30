@@ -2,7 +2,13 @@ require("dotenv").config();
 
 const fs = require("node:fs");
 const path = require("node:path");
-const { Client, Events, GatewayIntentBits, Collection } = require("discord.js");
+const {
+  Client,
+  Events,
+  GatewayIntentBits,
+  Collection,
+  Partials,
+} = require("discord.js");
 // import the discord bot token later
 
 const client = new Client({
@@ -10,7 +16,9 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.MessageContent,
   ],
+  partials: [Partials.Channel, Partials.Message],
 });
 
 client.commands = new Collection();

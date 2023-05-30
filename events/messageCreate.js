@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { Events } = require("discord.js");
 const { request } = require("undici");
 
 const openai_url = new URL("https://api.openai.com/v1/chat/completions");
@@ -9,24 +9,17 @@ const header = {
 };
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("chat")
-    .setDescription("Interact with ChatGPT!")
-    .addStringOption((option) =>
-      option
-        .setName("message")
-        .setDescription("The message to send to ChatGPT")
-        .setRequired(true)
-    ),
-  async execute(interaction) {
+  name: Events.MessageCreate,
+  async execute(m) {
+    if (m.author.bot || m.guild) return;
+
     try {
-      await interaction.deferReply({ ephemeral: false });
       const post_body = JSON.stringify({
         model: "gpt-3.5-turbo",
         messages: [
           {
             role: "user",
-            content: `${interaction.options.getString("message")}`,
+            content: `${m.content}`,
           },
         ],
       });
@@ -43,9 +36,9 @@ module.exports = {
 
       console.log(responseBody.choices[0].message);
 
-      await interaction.editReply(responseBody.choices[0].message.content);
+      m.author.send(responseBody.choices[0].message.content);
     } catch (err) {
-      console.error(`Error making request: ${err}`);
+      console.error(err);
     }
   },
 };
