@@ -13,6 +13,8 @@ module.exports = {
   async execute(m) {
     if (m.author.bot || m.guild) return;
 
+    console.log(m.author.id);
+
     try {
       const post_body = JSON.stringify({
         model: "gpt-3.5-turbo",
