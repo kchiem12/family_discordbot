@@ -12,7 +12,7 @@ const Messages = require("./models/Messages")(sequelize, Sequelize.DataTypes);
 
 const force = process.argv.includes("--force") || process.argv.includes("-f");
 
-Messages.sync({ force })
+Messages.sync()
   .then(async () => {
     console.log("Database synced");
 

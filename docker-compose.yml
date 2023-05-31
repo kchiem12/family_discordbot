@@ -1,0 +1,5 @@
+version: '3'
+services:
+  bot:
+    image: kchiem12/discord_bot 
+    env_file: .env
